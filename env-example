@@ -1,0 +1,20 @@
+TAUTULLI_API_KEY=
+TAUTULLI_IP=
+TAUTULLI_PORT=
+
+CLIENTE_TORRENT_IP=
+CLIENTE_TORRENT_PORT=
+CLIENTE_TORRENT_USER=
+CLIENTE_TORRENT_PASSWORD=
+
+# Opciones: qbittorrent o transmission
+CLIENTE_TORRENT=
+
+# Segundos que transcurren desde que detecta que ya no hay ninguna reproducción
+WAIT_TIME=2
+
+# Segundos entre chequeos
+WAIT_CHECK=10
+
+# 0 para salida básica, 1 para debug
+DEBUG_MODE=0
