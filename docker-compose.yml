@@ -1,0 +1,17 @@
+services:
+  speed-play-arr:
+    image: unraiders/speed-play-arr:latest
+    container_name: speed-play-arr
+    environment:
+      - TAUTULLI_API_KEY=${TAUTULLI_API_KEY}
+      - TAUTULLI_IP=${TAUTULLI_IP}
+      - TAUTULLI_PORT=${TAUTULLI_PORT}
+      - CLIENTE_TORRENT_IP=${CLIENTE_TORRENT_IP}
+      - CLIENTE_TORRENT_PORT=${CLIENTE_TORRENT_PORT}
+      - CLIENTE_TORRENT_USER=${CLIENTE_TORRENT_USER}
+      - CLIENTE_TORRENT_PASSWORD=${CLIENTE_TORRENT_PASSWORD}
+      - CLIENTE_TORRENT=${CLIENTE_TORRENT}
+      - WAIT_TIME=${WAIT_TIME:-2}
+      - WAIT_CHECK=${WAIT_CHECK:-10}
+      - DEBUG_MODE=${DEBUG_MODE:-0}
+    restart: unless-stopped
