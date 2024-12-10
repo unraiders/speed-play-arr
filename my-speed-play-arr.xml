@@ -28,5 +28,7 @@
   <Config Name="Cliente Torrent Usuario" Target="CLIENTE_TORRENT_USER" Default="" Mode="" Description="Usuario del cliente torrent" Type="Variable" Display="always" Required="true" Mask="false"/>
   <Config Name="Cliente Torrent Password" Target="CLIENTE_TORRENT_PASSWORD" Default="" Mode="" Description="Contraseña del cliente torrent" Type="Variable" Display="always" Required="true" Mask="true"/>
   <Config Name="Cliente Torrent" Target="CLIENTE_TORRENT" Default="qbittorrent" Mode="" Description="Cliente torrent (qbittorrent o transmission)" Type="Variable" Display="always" Required="true" Mask="false"/>
+  <Config Name="Tiempo de espera" Target="WAIT_TIME" Default="10" Mode="" Description="Segundos que transcurren desde que detecta que ya no hay ninguna reproducción" Type="Variable" Display="advanced" Required="true" Mask="false"/>
+  <Config Name="Intervalo chequeo" Target="WAIT_CHECK" Default="20" Mode="" Description="Segundos entre chequeos" Type="Variable" Display="advanced" Required="true" Mask="false"/>
   <Config Name="Modo Debug" Target="DEBUG_MODE" Default="0" Mode="" Description="Seleccionar 1 para debug, 0 para información básica" Type="Variable" Display="advanced" Required="true" Mask="false"/>
 </Container>
