@@ -79,14 +79,54 @@ class TorrentController:
                 login_url,
                 data={'username': self.username, 'password': self.password}
             )
-            if response.status_code == 200:
+            if response.status_code == 200 and response.text == "Ok.":
                 logger.info("Conectado a qBittorrent exitosamente")
                 return True
             else:
-                logger.error(f"Error al conectar con qBittorrent. Código de estado: {response.status_code}")
+                logger.error(f"Error al conectar con qBittorrent. Código de estado: {response.status_code}, Respuesta: {response.text}")
                 return False
         except Exception as e:
             logger.error(f"Error de conexión con qBittorrent: {str(e)}")
+            return False
+
+    def _check_qbittorrent_connection(self):
+        try:
+            response = self.session.get(f"http://{self.host}:{self.port}/api/v2/app/version")
+            if response.status_code == 200:
+                return True
+            # Si la sesión ha expirado, intentamos reconectar
+            logger.debug("Sesión expirada, intentando reconectar...")
+            return self._connect_qbittorrent()
+        except:
+            return self._connect_qbittorrent()
+
+    def _toggle_qbittorrent_speed_limit(self, enable):
+        try:
+            if not self._check_qbittorrent_connection():
+                raise Exception("No se pudo establecer conexión con qBittorrent")
+
+            # Obtener el modo actual
+            response = self.session.get(f"http://{self.host}:{self.port}/api/v2/transfer/speedLimitsMode")
+            if response.status_code != 200:
+                raise Exception(f"Error al obtener el modo actual. Código: {response.status_code}, Respuesta: {response.text}")
+            
+            try:
+                current_mode = response.json()
+            except ValueError as e:
+                raise Exception(f"Error al parsear la respuesta de qBittorrent: {response.text}")
+
+            logger.debug(f"Estado actual del límite de velocidad: {current_mode}")
+            
+            if (enable and not current_mode) or (not enable and current_mode):
+                toggle_url = f"http://{self.host}:{self.port}/api/v2/transfer/toggleSpeedLimitsMode"
+                logger.debug(f"Cambiando límite de velocidad usando {toggle_url}")
+                response = self.session.post(toggle_url)
+                if response.status_code != 200:
+                    raise Exception(f"Error al cambiar el límite de velocidad. Código: {response.status_code}")
+                logger.info(f"Límite de velocidad {'activado' if enable else 'desactivado'}")
+            return True
+        except Exception as e:
+            logger.error(f"Error al cambiar límite de velocidad en qBittorrent: {str(e)}")
             return False
 
     def _connect_transmission(self):
@@ -110,26 +150,6 @@ class TorrentController:
             return self._toggle_qbittorrent_speed_limit(enable)
         elif self.client_type == 'transmission':
             return self._toggle_transmission_speed_limit(enable)
-
-    def _toggle_qbittorrent_speed_limit(self, enable):
-        try:
-            url = f"http://{self.host}:{self.port}/api/v2/transfer/speedLimitsMode"
-            current_mode = self.session.get(
-                f"http://{self.host}:{self.port}/api/v2/transfer/speedLimitsMode"
-            ).json()
-            logger.debug(f"Estado actual del límite de velocidad: {current_mode}")
-            
-            if (enable and not current_mode) or (not enable and current_mode):
-                toggle_url = f"http://{self.host}:{self.port}/api/v2/transfer/toggleSpeedLimitsMode"
-                logger.debug(f"Cambiando límite de velocidad usando {toggle_url}")
-                response = self.session.post(toggle_url)
-                if response.status_code == 200:
-                    logger.info(f"Límite de velocidad {'activado' if enable else 'desactivado'}")
-                    return True
-            return True
-        except Exception as e:
-            logger.error(f"Error al cambiar límite de velocidad en qBittorrent: {str(e)}")
-            return False
 
     def _toggle_transmission_speed_limit(self, enable):
         try:
