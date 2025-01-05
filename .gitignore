@@ -1,5 +1,6 @@
 # Propio
-*_LOCAL.py
+*LOCAL.*
+instruction.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
